@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- App Sandbox: required for Mac App Store and best practice for DMG distribution -->
+    <key>com.apple.security.app-sandbox</key>
+    <true/>
+    <!-- Required for WKWebView to make outbound network requests in sandboxed apps -->
+    <key>com.apple.security.network.client</key>
+    <true/>
+    <!--
+        Note: com.apple.security.cs.allow-jit is listed in some guides for WKWebView.
+        WKWebView's JS engine runs in a separate WebContent process with its own entitlements.
+        Test WITHOUT this first — only add if WKWebView JS execution fails at runtime.
+    -->
+</dict>
+</plist>
