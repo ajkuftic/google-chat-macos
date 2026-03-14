@@ -10,6 +10,7 @@ RESOURCE_BUNDLE=".build/debug/Chirp_Chirp.bundle"
 APP=".build/Chirp.app"
 CONTENTS="$APP/Contents"
 MACOS="$CONTENTS/MacOS"
+ENTITLEMENTS="ChirpApp.entitlements"
 
 echo "▶ Packaging .app..."
 rm -rf "$APP"
@@ -17,10 +18,10 @@ mkdir -p "$MACOS"
 
 cp "$BINARY" "$MACOS/Chirp"
 
-# Bundle.module resolves the resource bundle relative to the executable.
-if [ -d "$RESOURCE_BUNDLE" ]; then
-  cp -r "$RESOURCE_BUNDLE" "$MACOS/"
-fi
+mkdir -p "$CONTENTS/Resources"
+# ChatWebView loads bridge.js via Bundle.main — place it in Contents/Resources/
+# so codesign seals it as part of the standard app bundle structure.
+cp "$RESOURCE_BUNDLE/bridge.js" "$CONTENTS/Resources/"
 
 cat > "$CONTENTS/Info.plist" << 'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
@@ -39,6 +40,25 @@ cat > "$CONTENTS/Info.plist" << 'PLIST'
 </dict>
 </plist>
 PLIST
+
+# Sign with an Apple Development certificate so entitlements (e.g. passkeys) are honored.
+# The OS ignores entitlements on unsigned or ad-hoc-signed binaries for protected APIs.
+SIGN_IDENTITY=$(security find-identity -v -p codesigning 2>/dev/null \
+  | grep "Apple Development" | head -1 | sed -E 's/.*"(.+)".*/\1/')
+
+if [ -n "$SIGN_IDENTITY" ]; then
+  echo "▶ Signing with: $SIGN_IDENTITY"
+  # Dev entitlements: passkey support only, no sandbox.
+  # The sandbox requires the full .app bundle to be signed, which fails due to the
+  # SPM resource bundle structure. Sandbox is a distribution requirement, not dev.
+  # Note: com.apple.developer.web-browser.public-key-credential (passkeys) requires
+  # a paid Apple Developer Program account. Sign without it for free-account dev builds.
+  codesign --force --sign "$SIGN_IDENTITY" \
+    "$MACOS/Chirp"
+else
+  echo "⚠️  No Apple Development certificate found — passkeys will not work."
+  echo "   Enroll in the Apple Developer Program and run 'xcodebuild -allowProvisioningUpdates' to install certificates."
+fi
 
 echo "▶ Launching..."
 open "$APP"

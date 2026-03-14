@@ -84,7 +84,10 @@ struct ChatWebView: NSViewRepresentable {
         webView.customUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Safari/605.1.15"
 
         // Load Google Chat.
-        let request = URLRequest(url: URL(string: "https://chat.google.com")!)
+        // Load /u/0/ directly — chat.google.com without a path shows the marketing page
+        // when not signed in. /u/0/ forces the app shell, which redirects to accounts.google.com
+        // for auth instead of the landing page.
+        let request = URLRequest(url: URL(string: "https://chat.google.com/u/0/")!)
         webView.load(request)
 
         // Ensure the web view receives keyboard input as soon as it is placed in the window.
@@ -100,7 +103,7 @@ struct ChatWebView: NSViewRepresentable {
     // MARK: - Bridge Script Loading
 
     private func loadBridgeScript(nonce: String) -> String? {
-        guard let url = Bundle.module.url(forResource: "bridge", withExtension: "js"),
+        guard let url = Bundle.main.url(forResource: "bridge", withExtension: "js"),
               var source = try? String(contentsOf: url, encoding: .utf8) else {
             assertionFailure("bridge.js not found in bundle")
             return nil
@@ -175,7 +178,11 @@ struct ChatWebView: NSViewRepresentable {
 
             let host = url.host ?? ""
             let isAllowed = ChatWebView.allowedHosts.contains(host) ||
-                            host.hasSuffix(".google.com")
+                            host.hasSuffix(".google.com") ||
+                            host == "doubleclick.net" ||
+                            host.hasSuffix(".doubleclick.net") ||
+                            host.hasSuffix(".gstatic.com") ||
+                            host.hasSuffix(".googleapis.com")
 
             if isAllowed {
                 decisionHandler(.allow)
