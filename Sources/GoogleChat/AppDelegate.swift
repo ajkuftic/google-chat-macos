@@ -1,6 +1,7 @@
 import AppKit
 import Combine
 
+@MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
 
     // MARK: - Dependencies
@@ -13,6 +14,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     // MARK: - NSApplicationDelegate
 
     func applicationDidFinishLaunching(_ notification: Notification) {
+        NSApp.activate(ignoringOtherApps: true)
         statusBarController = StatusBarController(appState: appState)
 
         // Single source of truth: AppState.unreadCount drives the Dock badge.

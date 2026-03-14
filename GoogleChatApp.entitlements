@@ -8,6 +8,10 @@
     <!-- Required for WKWebView to make outbound network requests in sandboxed apps -->
     <key>com.apple.security.network.client</key>
     <true/>
+    <!-- Allows passkey (WebAuthn) operations for any website loaded in WKWebView,
+         without requiring Associated Domains (which we can't use for google.com). -->
+    <key>com.apple.developer.web-browser.public-key-credential</key>
+    <true/>
     <!--
         Note: com.apple.security.cs.allow-jit is listed in some guides for WKWebView.
         WKWebView's JS engine runs in a separate WebContent process with its own entitlements.

@@ -5,6 +5,7 @@ import Combine
 ///
 /// NSStatusItem must be held with a strong reference — ARC will deallocate it
 /// immediately if stored weakly or as a local variable, removing the icon.
+@MainActor
 final class StatusBarController {
 
     // MARK: - Dependencies
