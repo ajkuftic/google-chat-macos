@@ -68,7 +68,7 @@ final class NotificationManager: NSObject {
     func showReplyFailedNotification(replyText: String) {
         let content = UNMutableNotificationContent()
         content.title = "Reply not sent"
-        content.body = "Open Google Chat to send your reply."
+        content.body = "Open Chirp to send your reply."
         // NOTE: Never include replyText in the notification body — it would be persisted
         // to the OS notification database outside the app's control.
 

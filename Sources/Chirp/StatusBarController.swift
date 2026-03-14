@@ -33,7 +33,7 @@ final class StatusBarController {
         if let button = statusItem.button {
             button.image = baseImage()
             button.image?.isTemplate = true  // Automatically adapts to Dark Mode
-            button.toolTip = "Google Chat"
+            button.toolTip = "Chirp"
         }
 
         statusItem.menu = buildMenu()
@@ -96,10 +96,10 @@ final class StatusBarController {
 
     private func buildMenu() -> NSMenu {
         let menu = NSMenu()
-        menu.addItem(withTitle: "Show Google Chat", action: #selector(showWindow), keyEquivalent: "")
+        menu.addItem(withTitle: "Show Chirp", action: #selector(showWindow), keyEquivalent: "")
             .target = self
         menu.addItem(.separator())
-        menu.addItem(withTitle: "Quit Google Chat", action: #selector(quit), keyEquivalent: "q")
+        menu.addItem(withTitle: "Quit Chirp", action: #selector(quit), keyEquivalent: "q")
             .target = self
         return menu
     }
@@ -116,6 +116,6 @@ final class StatusBarController {
     // MARK: - Helpers
 
     private func baseImage() -> NSImage? {
-        NSImage(systemSymbolName: "message.fill", accessibilityDescription: "Google Chat")
+        NSImage(systemSymbolName: "message.fill", accessibilityDescription: "Chirp")
     }
 }

@@ -2,12 +2,12 @@
 import PackageDescription
 
 let package = Package(
-    name: "GoogleChat",
+    name: "Chirp",
     platforms: [.macOS(.v14)],
     targets: [
         .executableTarget(
-            name: "GoogleChat",
-            path: "Sources/GoogleChat",
+            name: "Chirp",
+            path: "Sources/Chirp",
             resources: [
                 .process("Resources")
             ],
@@ -17,4 +17,3 @@ let package = Package(
         )
     ]
 )
-

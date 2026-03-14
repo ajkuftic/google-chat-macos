@@ -78,9 +78,10 @@ struct ChatWebView: NSViewRepresentable {
         webView.uiDelegate = context.coordinator
         coordinator.webView = webView
 
-        // Override the default WKWebView UA — Google Chat blocks non-browser agents.
-        // We present as Chrome on macOS, which is explicitly supported.
-        webView.customUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+        // Use a Safari UA. Google Chat supports Safari on macOS, and Google Sign-In
+        // fully trusts it — unlike Chrome UA + missing Chrome JS properties, which
+        // triggers the "browser may not be secure" block during auth.
+        webView.customUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.3 Safari/605.1.15"
 
         // Load Google Chat.
         let request = URLRequest(url: URL(string: "https://chat.google.com")!)

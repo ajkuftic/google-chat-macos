@@ -2,7 +2,7 @@ import SwiftUI
 import AppKit
 
 @main
-struct GoogleChatApp: App {
+struct ChirpApp: App {
 
     @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
